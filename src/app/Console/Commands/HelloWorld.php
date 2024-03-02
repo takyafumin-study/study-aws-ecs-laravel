@@ -25,7 +25,7 @@ class HelloWorld extends Command
      */
     public function handle()
     {
-        $this->line('Hello' . config('app.world'));
+        $this->line('Hello' . config('app.word'));
 
         return 0;
     }

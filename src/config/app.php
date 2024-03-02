@@ -5,7 +5,7 @@ use Illuminate\Support\ServiceProvider;
 
 return [
 
-    'world' => env('APP_WORD'),
+    'word' => env('APP_WORD'),
 
     /*
     |--------------------------------------------------------------------------
