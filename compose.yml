@@ -1,0 +1,18 @@
+services:
+  # nginx
+  nginx:
+    image: ecs-laravel/nginx:latest
+    volumes:
+      - ./.docker/nginx/local/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 127.0.0.1:80:80
+    depends_on:
+      - laravel
+
+  # application server
+  laravel:
+    image: ecs-laravel/laravel:latest
+    volumes:
+      - ./src:/application
+    env_file:
+      - ./src/.env
