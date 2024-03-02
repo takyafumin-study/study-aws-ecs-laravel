@@ -144,6 +144,18 @@ aws iam create-service-linked-role --aws-service-name ecs.amazonaws.com
 aws ecs register-task-definition --cli-input-json file://ecs-task-definition-for-command.json
 ```
 
+### Webアプリケーションタスク
+
+#### タスク定義を作成
+
+- ecs-task-definition-for-web.json
+
+タスク定義を登録
+
+```bash
+aws ecs register-task-definition --cli-input-json file://ecs-task-definition-for-web.json
+```
+
 ## 実行
 
 ### バッチ処理タスク
@@ -157,4 +169,30 @@ aws ecs run-task \
     --overrides '{"containerOverrides": [ {"name": "laravel", "command": [ "sh", "-c", "php artisan print:helloworld" ]} ]}' \
     --launch-type FARGATE \
     --network-configuration "awsvpcConfiguration={subnets=[subnet-097b58401e07aa251], securityGroups=[sg-056fdf12c789a21db], assignPublicIp=ENABLED}"
+```
+
+### Webアプリケーション
+
+サービス作成
+
+```bash
+aws ecs create-service \
+    --cluster ecs-laravel \
+    --service-name ecs-laravel \
+    --task-definition ecs-laravel-for-web \
+    --launch-type FARGATE \
+    --desired-count 1 \
+    --network-configuration "awsvpcConfiguration={subnets=[subnet-097b58401e07aa251], securityGroups=[sg-056fdf12c789a21db], assignPublicIp=ENABLED}"
+```
+
+## サービスの削除
+
+以下のコマンド実行後、GUIから削除する(コマンド無しで強制削除でも言いかも)
+
+```bash
+# サービスを確認
+aws ecs list-services --cluster arn:aws:ecs:ap-northeast-1:958457953221:cluster/ecs-laravel
+
+# desired-countを0にする
+aws ecs update-service --cluster ecs-laravel --service ecs-laravel --desired-count 0
 ```
