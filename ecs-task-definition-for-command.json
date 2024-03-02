@@ -1,0 +1,38 @@
+{
+  "family": "ecs-laravel-for-command",
+  "taskRoleArn": "arn:aws:iam::958457953221:role/ECSTaskRole",
+  "executionRoleArn": "arn:aws:iam::958457953221:role/ECSTaskRole",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "name": "laravel",
+      "image": "958457953221.dkr.ecr.ap-northeast-1.amazonaws.com/ecs-laravel/laravel:latest",
+      "essential": true,
+      "environment": [
+        {
+          "name": "APP_ENV",
+          "value": "production"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "APP_WORD",
+          "valueFrom": "arn:aws:ssm:ap-northeast-1:958457953221:parameter/APP_WORD"
+        }
+      ],
+      "readonlyRootFilesystem": false,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "ecs-laravel",
+          "awslogs-region": "ap-northeast-1",
+          "awslogs-datetime-format": "%Y-%m-%d %H:%M:%S",
+          "awslogs-stream-prefix": "laravel"
+        }
+      }
+    }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512"
+}

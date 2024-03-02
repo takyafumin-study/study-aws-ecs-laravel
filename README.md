@@ -115,3 +115,46 @@ aws iam create-service-linked-role --aws-service-name ecs.amazonaws.com
 
 - ロググループ名
   - `ecs-laravel`
+
+### ECSクラスターの作成
+
+- クラスター名
+  - `ecs-laravel`
+- インフラストラクチャ
+  - AWS Fargete(サーバーレス)
+
+### パラメータストアを作成
+
+- 名前
+  - `APP_WORD`
+- タイプ
+  - 安全な文字列
+- 値
+  - `Hoge Hoge!!`
+
+### バッチ処理タスク
+
+#### タスク定義を作成
+
+- ecs-task-definition-for-command.json
+
+タスク定義を登録
+
+```bash
+aws ecs register-task-definition --cli-input-json file://ecs-task-definition-for-command.json
+```
+
+## 実行
+
+### バッチ処理タスク
+
+ECSタスク実行
+
+```bash
+aws ecs run-task \
+    --cluster ecs-laravel \
+    --task-definition ecs-laravel-for-command \
+    --overrides '{"containerOverrides": [ {"name": "laravel", "command": [ "sh", "-c", "php artisan print:helloworld" ]} ]}' \
+    --launch-type FARGATE \
+    --network-configuration "awsvpcConfiguration={subnets=[subnet-097b58401e07aa251], securityGroups=[sg-056fdf12c789a21db], assignPublicIp=ENABLED}"
+```
